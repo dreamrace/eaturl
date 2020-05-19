@@ -1,4 +1,4 @@
-eaturl
+# Shortener
 
 This is a urlshortener written in golang, deployable in AWS via Terraform
 
@@ -19,3 +19,7 @@ Supply to required to variables specified in variables.tf, then
 terraform plan
 terraform apply
 ```
+
+## Answers for other questions
+
+Please refer to Answers.md
