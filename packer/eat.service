@@ -1,0 +1,10 @@
+[Unit]
+Description=Execute service at host startup
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/home/ec2-user/packer/start.sh
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,53 @@
+{
+  "variables": {
+    "access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
+    "secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "region": "{{env `AWS_REGION`}}"
+  },
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "access_key": "{{user `access_key`}}",
+      "secret_key": "{{user `secret_key`}}",
+      "region": "{{user `region`}}",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "root-device-type": "ebs",
+          "name": "amzn2-ami-hvm-*"
+        },
+        "owners": [
+          "amazon"
+        ],
+        "most_recent": true
+      },
+      "instance_type": "t2.micro",
+      "ssh_username": "ec2-user",
+      "ami_name": "packer-golang {{timestamp}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["sudo yum install -y golang jq; mkdir ~/app"]
+    },
+    {
+      "type": "file",
+      "source": "./",
+      "destination": "/home/ec2-user/app"
+    },
+    {
+      "type": "shell",
+      "script": "./packer/build.sh"
+    },
+    {
+      "type": "file",
+      "source": "./packer",
+      "destination": "/home/ec2-user/packer"
+    },
+    {
+      "type": "shell",
+      "script": "./packer/service.sh"
+    }
+  ]
+}
